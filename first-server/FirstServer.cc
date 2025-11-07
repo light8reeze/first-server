@@ -66,8 +66,6 @@ int worker_thread(int socket_fd, io_uring* ring) {
 			io_uring_prep_recv(sqe, client_fd, info->buffer, sizeof(info->buffer), 0);
 			io_uring_sqe_set_data(sqe, info);
 
-			io_uring_submit(ring);
-
 		}
 		else if (info->type == EVENT_READ) {
 			int bytes_read = cqe->res;
@@ -86,7 +84,6 @@ int worker_thread(int socket_fd, io_uring* ring) {
 				io_uring_prep_send(sqe, info->fd, info->buffer, bytes_read, 0);
 				info->type = EVENT_WRITE;
 				io_uring_sqe_set_data(sqe, info);
-				io_uring_submit(ring);
 			}
 
 		}
@@ -98,9 +95,9 @@ int worker_thread(int socket_fd, io_uring* ring) {
 			io_uring_prep_recv(sqe, info->fd, info->buffer, sizeof(info->buffer), 0);
 			info->type = EVENT_READ;
 			io_uring_sqe_set_data(sqe, info);
-			io_uring_submit(ring);
 		}
 
+		io_uring_submit(ring);
 		io_uring_cqe_seen(ring, cqe);
 	}
 
