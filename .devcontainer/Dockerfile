@@ -7,6 +7,12 @@ RUN apt update && apt install -y \
     git \
     liburing-dev \
     pkg-config \
-    vim
+    vim \
+    curl \
+    gdb \
+    && rm -rf /var/lib/apt/lists/* \
+    wget
 
 WORKDIR /workspace
+
+CMD ["/bin/bash"]
