@@ -26,7 +26,7 @@ namespace first {
 
 			IOUringObject acceptor_object_;
 
-            // TODO: ÃßÈÄ º°µµ Ç®·Î ºÐ¸®
+            // TODO: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç®ï¿½ï¿½ ï¿½Ð¸ï¿½
 			IOUringObject  client_object_[100];
     };
 }

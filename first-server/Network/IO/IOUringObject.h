@@ -17,6 +17,7 @@ namespace first {
 	public:
 		virtual void on_received(int bytes_received);
 		virtual void on_sent(int bytes_sent);
+		virtual void on_accepted();
 
 
 	public:

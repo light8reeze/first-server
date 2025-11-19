@@ -10,4 +10,8 @@ namespace first {
     IOURingThread::~IOURingThread() {
         io_uring_queue_exit(&ring_);
     }
+
+    void IOURingThread::request_io(IOOperation* operation) {
+        ring_queue_.push_request(operation);
+    }
 }

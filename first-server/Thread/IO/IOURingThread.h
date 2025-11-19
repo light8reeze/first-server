@@ -11,7 +11,11 @@ namespace first {
         virtual ~IOURingThread();
 
 
+    public:
+        void request_io(IOOperation* operation);
+
+
     protected:
-		IORequestQueue ring_queue_;
+		    IORequestQueue ring_queue_;
     };
 }
