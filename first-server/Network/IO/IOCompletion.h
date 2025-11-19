@@ -1,10 +1,9 @@
 #pragma once
 
-namespace first {
+struct io_uring;
+struct io_uring_cqe;
 
-	struct io_uring;
-	struct io_uring_cqe;
-	
+namespace first {	
 	class IOOperation;
 	class IOCompletion {
 	public:
@@ -21,7 +20,6 @@ namespace first {
 
 	public:
 		IOOperation* get_completed_operation() const { return completed_operation_; }
-		int get_result() const { return cqe_ ? cqe_->res : -1; }
 		
 
 	private:

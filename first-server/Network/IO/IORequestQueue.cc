@@ -17,7 +17,6 @@ namespace first {
 		socklen_t addrlen = sizeof(io_object->get_address());
 		struct sockaddr* addr = reinterpret_cast<struct sockaddr*>(&io_object->get_address());
 
-		io_object->set_request_type(IO_EVENT_ACCEPT);
 		::io_uring_prep_accept(sqe, acceptor->get_socket_fd(), addr, &addrlen, 0);
 		::io_uring_sqe_set_data(sqe, io_object);
 	}
@@ -32,7 +31,6 @@ namespace first {
 	void IORequestQueue::set_send(IOUringObject* io_object) {
 		io_uring_sqe* sqe = io_uring_get_sqe(&ring_);
 
-		io_object->set_request_type(IO_EVENT_WRITE);
 		::io_uring_prep_send(sqe, io_object->get_socket_fd(), io_object->get_buffer(), io_object->get_buffer_size(), 0);
 		::io_uring_sqe_set_data(sqe, io_object);
 	}

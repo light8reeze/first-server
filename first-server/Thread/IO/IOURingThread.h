@@ -1,6 +1,6 @@
+#pragma once
 #include "Thread.h"
 #include <IOUring.h>
-#include <boost/lockfree/queue.hpp>
 
 namespace first {
 
@@ -16,6 +16,6 @@ namespace first {
 
 
     protected:
-		    IORequestQueue ring_queue_;
+		IORequestQueue ring_queue_;
     };
 }

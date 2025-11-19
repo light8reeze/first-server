@@ -1,7 +1,4 @@
-﻿# CMakeList.txt : 최상위 CMake 프로젝트 파일, 전역 구성을 수행하고
-# 여기에 하위 프로젝트를 포함합니다.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.8)
 
 # 지원되는 경우 MSVC 컴파일러에 대해 핫 다시 로드 사용하도록 설정합니다.
 if (POLICY CMP0141)
@@ -12,6 +9,5 @@ endif()
 project ("first-server")
 project ("test-client")
 
-# 하위 프로젝트를 포함합니다.
 add_subdirectory ("first-server")
 add_subdirectory ("test-client")

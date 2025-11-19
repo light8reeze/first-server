@@ -20,6 +20,8 @@ endif()
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 
-target_link_libraries(first-server ${LIBURING_LIB})
-target_include_directories(first-server PRIVATE Boost::boost)
+target_include_directories(first-server PRIVATE ${Boost_INCLUDE_DIRS})
 target_include_directories(first-server PRIVATE ${LIBURING_INCLUDE})
+
+target_link_libraries(first-server ${LIBURING_LIB})
+target_link_libraries(first-server ${Boost_LIBRARIES})

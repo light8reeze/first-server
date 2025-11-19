@@ -2,7 +2,8 @@
 #include "WorkerThread.h"
 
 namespace first {
-
+    
+    class IOOperation;
     class IOThreadPool {
     public:
         IOThreadPool(int num_threads = 4, int queue_depth = 1024);
@@ -13,6 +14,8 @@ namespace first {
         void initialize();
         void start();
         void stop();
+        void stop(int thread_index);
+        void join_all();
 
         void request_io(IOOperation* operation);
         void request_io(int thread_index, IOOperation* operation);
@@ -25,7 +28,7 @@ namespace first {
 
 
     private:
-        static IOThreadPool* instance_;
+        static IOThreadPool* instance_ = nullptr;
 
 
     public:

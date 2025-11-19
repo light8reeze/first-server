@@ -1,5 +1,4 @@
 #pragma once
-
 #include <thread>
 #include "FirstServerPCH.h"
 
@@ -21,6 +20,7 @@ namespace first {
 		void run();
 
 
+		void set_thread_id(int id) { thread_id_ = id; }
 		int get_thread_id() const { return thread_id_; }
 
 
