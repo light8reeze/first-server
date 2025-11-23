@@ -37,7 +37,7 @@ namespace first {
 		::io_uring_sqe_set_data(sqe, io_object);
 	}
 
-	IOCompletion IORequestQueue::wait(int timeout_ms /*= -1*/) {
+	IOCompletion IORequestQueue::wait_one(int timeout_ms /*= -1*/) {
 		struct __kernel_timespec ts;
 		ts.tv_sec = 0;
 		ts.tv_nsec = timeout_ms * 1000000;
@@ -50,7 +50,7 @@ namespace first {
 			ret = ::io_uring_wait_cqe(&ring_, &cqe);
 
 		if (ret < 0) {
-			// TODO: ����ó�� �߰�
+			// TODO: Handle error
 			return IOCompletion(nullptr, nullptr);
 		}
 

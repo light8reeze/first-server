@@ -19,7 +19,7 @@ namespace first {
 		void			set_receive(IOUringObject* io_object);
 		void			set_send(IOUringObject* io_object);
 
-		IOCompletion	wait(int timeout_ms = -1);
+		IOCompletion	wait_one(int timeout_ms = -1);
 		void			submit();
 
 		void			push_request(IOOperation* operation);

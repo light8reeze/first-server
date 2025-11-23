@@ -1,6 +1,7 @@
 add_library(first-server-net STATIC 
 							"src/IOCompletion.cc"
 							"src/IOOperationAccept.cc"
+							"src/IOOperationNop.cc"
 							"src/IOOperationRecv.cc"
 							"src/IOOperationSend.cc"
 							"src/IORequestQueue.cc")

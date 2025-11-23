@@ -18,12 +18,17 @@ namespace first {
     }
 
     void IOOperationAccept::handle_io_completion(int result) {
+        assert(nullptr != io_object_);
+        
         if (nullptr == io_object_) {
             return;
         }
 
         if (result < 0) {
-
+            io_object_->on_accept_failed(result);
+            return;
         }
+
+        io_object_->on_accepted();
     }
 }

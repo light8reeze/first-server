@@ -21,6 +21,12 @@ namespace first {
 
 
 	public:
+		virtual void on_accept_failed(int error_code) {};
+		virtual void on_receive_failed(int error_code) {};
+		virtual void on_send_failed(int error_code) {};
+
+		
+	public:
 		void set_socket_fd(socket_fd fd) { socket_fd_ = fd; }
 		void set_address(const struct sockaddr_in& addr) { address_ = addr; }
 
