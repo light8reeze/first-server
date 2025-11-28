@@ -16,6 +16,7 @@ namespace first {
 		initialize_threads();
 
 		// TODO: ���� FactoryŬ������ ���� �и�
+		sessions_.reserve(session_count_);
 		std::shared_ptr<Service> self = shared_from_this();
 		for (int i = 0; i < session_count_; ++i)
 		{
@@ -38,8 +39,7 @@ namespace first {
 	}
 
 	void Service::request_io(IOOperation* operation) {
-		static std::atomic<int> request_index = 0;
-		int thread_index = request_index++ % thread_count_;
+		int thread_index = request_index_++ % thread_count_;
 
 		request_io(thread_index, operation);
 	}

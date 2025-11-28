@@ -7,6 +7,7 @@ if (POLICY CMP0141)
 endif()
 
 project("first-server")
+project("test-client")
 
 add_subdirectory("first-server")
-#add_subdirectory("test-client")
+add_subdirectory("test-client")

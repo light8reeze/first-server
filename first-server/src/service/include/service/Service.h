@@ -40,5 +40,7 @@ namespace first {
 		int session_count_          = 1000;
 		int thread_count_           = 4;
 		int queue_depth_per_thread_ = 1024;
+
+        std::atomic<int> request_index_ = 0;
     };
 }

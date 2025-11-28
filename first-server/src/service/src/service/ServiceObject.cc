@@ -5,6 +5,8 @@
 #include <net/IOOperationSend.h>
 #include <net/IOOperationAccept.h>
 
+#include <iostream>
+
 namespace first {
 	ServiceObject::ServiceObject(std::shared_ptr<Service>& service_instance) 
 		: service_instance_(service_instance) {
@@ -34,6 +36,13 @@ namespace first {
 	}
 
 	void ServiceObject::on_accepted() {
+		std::cout << "on accepted" << std::endl;
+		request_receive();
+	}
+
+	void ServiceObject::on_received(int bytes_received) {
+		std::cout << "bytes received : " << bytes_received << std::endl;
+
 		request_receive();
 	}
 }

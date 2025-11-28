@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-#define SERVER_PORT 8080
+#define SERVER_PORT 4832
 #define BUFFER_SIZE 1024
 
 int main() {
