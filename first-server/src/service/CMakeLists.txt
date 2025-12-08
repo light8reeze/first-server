@@ -3,7 +3,8 @@ add_library(first-server-service STATIC
 							"src/thread/Thread.cc"
 							"src/thread/WorkerThread.cc"
 							"src/service/Service.cc"
-							"src/service/ServiceObject.cc")
+							"src/service/ServiceObject.cc"
+							"src/task/TaskSerializer.cc")
 
 
 find_package(Boost 1.83 REQUIRED COMPONENTS atomic)
