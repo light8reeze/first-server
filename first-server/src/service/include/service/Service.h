@@ -1,6 +1,7 @@
 #pragma once
 #include <service/ServiceBuilder.h>
 #include <vector>
+#include <atomic>
 
 namespace first {
     class IOOperation;

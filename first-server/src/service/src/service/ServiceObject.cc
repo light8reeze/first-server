@@ -42,6 +42,8 @@ namespace first {
 
 	void ServiceObject::on_received(int bytes_received) {
 		std::cout << "bytes received : " << bytes_received << std::endl;
+		
+		// TODO: 이벤트 처리
 
 		request_receive();
 	}
