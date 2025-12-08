@@ -15,7 +15,7 @@ namespace first {
     }
 
     int WorkerThread::routine() {
-		IOCompletion completion = ring_queue_.wait_one();
+		IOCompletion completion = ring_queue_.wait_one(0);
 
         completion.handle_completion();
  
