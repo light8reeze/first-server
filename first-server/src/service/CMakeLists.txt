@@ -3,8 +3,7 @@ add_library(first-server-service STATIC
 							"src/thread/Thread.cc"
 							"src/thread/WorkerThread.cc"
 							"src/service/Service.cc"
-							"src/service/ServiceObject.cc"
-							"src/task/TaskSerializer.cc")
+							"src/service/ServiceObject.cc")
 
 
 find_package(Boost 1.83 REQUIRED COMPONENTS atomic)
@@ -16,3 +15,4 @@ target_include_directories(first-server-service PUBLIC ${Boost_INCLUDE_DIRS})
 
 target_link_libraries(first-server-service PUBLIC first-server-net first-server-util)
 target_link_libraries(first-server-service PUBLIC Boost::boost Boost::atomic)
+target_link_libraries(first-server-service PUBLIC first-server-task)

@@ -24,4 +24,5 @@ target_link_libraries(first-server PRIVATE
                                     ${Boost_LIBRARIES}
                                     first-server-net
                                     first-server-util
-                                    first-server-service)
+                                    first-server-service
+                                    first-server-task)

@@ -5,10 +5,12 @@
 
 namespace first {
 
+    // TaskSerializer에 요청할 작업에 대한 클래스
+    // TaskSerializer에 의해서만 생성되어야 함
     class ITask {
     public:
         virtual void invoke() = 0;
-        virtual ~ITask(){};
+        virtual ~ITask(){}
     };
 
     template <typename Obj, typename Func, typename... Args>

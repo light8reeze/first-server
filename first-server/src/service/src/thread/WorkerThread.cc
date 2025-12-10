@@ -1,4 +1,5 @@
 #include <thread/WorkerThread.h>
+#include <task/TaskDistributor.h>
 #include <iostream>
 
 namespace first {
@@ -12,6 +13,8 @@ namespace first {
 
     void WorkerThread::initialize() {
         IOURingThread::initialize();
+
+        g_task_distributor = new TaskDistributor();
     }
 
     int WorkerThread::routine() {
@@ -20,6 +23,8 @@ namespace first {
         completion.handle_completion();
  
         ring_queue_.flush_requests();
+
+        g_task_distributor->process_task_serializer();
 
         return 0;
     }
