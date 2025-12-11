@@ -9,10 +9,11 @@ namespace braid {
     private:
         // 한번 처리시 최대 Task 수
         static constexpr int MAX_PROCESS_TASK_COUNT = 30;
+        static constexpr int MAX_SERIALIZER_COUNT = 1024;
 
     public:
-        TaskDistributor() = default;
-        ~TaskDistributor() = default;
+        TaskDistributor();
+        ~TaskDistributor();
         
         void add_task_serializer(TaskSerializer* taskSerializer);
         void process_task_serializer();

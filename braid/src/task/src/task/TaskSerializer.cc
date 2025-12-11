@@ -3,6 +3,9 @@
 #include <braid/task/Task.h>
 
 namespace braid {
+    TaskSerializer::TaskSerializer() : task_queue_(MAX_TASK_COUNT) {
+    }
+
     TaskSerializer::~TaskSerializer() {
         clear();
     }

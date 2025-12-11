@@ -4,6 +4,17 @@
 
 namespace braid {
 
+    TaskDistributor::TaskDistributor() : serializer_queue_(MAX_SERIALIZER_COUNT) {
+    }
+
+    TaskDistributor::~TaskDistributor() {
+        while (!serializer_queue_.empty()) {
+            TaskSerializer* task_serializer = nullptr;
+            serializer_queue_.pop(task_serializer);
+            delete task_serializer;
+        }
+    }
+
     void TaskDistributor::add_task_serializer(TaskSerializer* task_serializer) {
         serializer_queue_.push(task_serializer);
     }
