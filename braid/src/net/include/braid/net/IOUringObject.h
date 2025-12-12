@@ -2,6 +2,8 @@
 #include <braid/util/BraidPCH.h>
 #include <netinet/in.h>
 #include <memory>
+#include <span>
+#include <cstring>
 
 namespace braid {
 	
@@ -27,18 +29,32 @@ namespace braid {
 
 		
 	public:
+		void commit(int size) { commited_size_ += size; }
+		void process_completed(int size) {
+			if(0 < commited_size_ - size)
+				std::memmove(buffer_, buffer_ + size, commited_size_ - size);
+
+			commited_size_ -= size;
+		}
+
+
+	public:
 		void set_socket_fd(int fd) { socket_fd_ = fd; }
 		void set_address(const struct sockaddr_in& addr) { address_ = addr; }
 
 		char*				get_buffer() { return buffer_; }
-		int					get_buffer_size() const { return 4096; }
+		int					get_buffer_size() const { return 4096 - commited_size_; }
 		int					get_socket_fd() const { return socket_fd_; }
 		struct sockaddr_in& get_address() { return address_; }
+
+		std::span<char> get_received_span() { return std::span<char>(buffer_, commited_size_); }
+		std::span<char> get_remain_span() { return std::span<char>(buffer_ + commited_size_, 4096 - commited_size_); }
 
 
 	protected:
 		// TODO: 버퍼 클래스 추후 분리
 		char				buffer_[4096] = { 0 };
+		int					commited_size_ = 0;
 
 
 	private:

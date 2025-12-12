@@ -3,7 +3,9 @@ add_library(braid-service STATIC
 							"src/thread/Thread.cc"
 							"src/thread/WorkerThread.cc"
 							"src/service/Service.cc"
-							"src/service/ServiceSession.cc")
+							"src/service/ServiceSession.cc"
+							"src/message/MessageDispatcher.cc"
+							)
 
 
 find_package(Boost 1.83 REQUIRED COMPONENTS atomic)

@@ -6,7 +6,7 @@
 namespace braid {
 
     class ITask;
-    class TaskSerializer final : public RefCountable {
+    class TaskSerializer : public RefCountable {
     private:
         static constexpr int MAX_TASK_COUNT = 1024;
 
@@ -21,7 +21,7 @@ namespace braid {
 
     public:
         TaskSerializer();
-        ~TaskSerializer();
+        virtual ~TaskSerializer();
 
 
     private:

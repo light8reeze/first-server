@@ -1,11 +1,11 @@
 #pragma once
 #include <braid/net/IOUringObject.h>
+#include <braid/service/Actor.h>
 #include <memory>
 
 namespace braid {
 
 	class Service;
-	class Actor;
 	// 서비스 레이어에서 사용하는 기본 오브젝트
 	class ServiceSession : public IOUringObject {
 
@@ -27,5 +27,7 @@ namespace braid {
 
 	protected:
 		const std::weak_ptr<Service> service_instance_;
+
+		ObjectPtr<Actor> actor_;
 	};
 }
