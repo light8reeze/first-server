@@ -3,7 +3,7 @@
 #include <type_traits>
 #include <cassert>
 #include <braid/util/BraidPCH.h>
-#include <braid/service/ServiceObject.h>
+#include <braid/service/ServiceSession.h>
 #include <arpa/inet.h>
 
 namespace braid {
@@ -38,9 +38,9 @@ namespace braid {
 
             std::shared_ptr<ServiceType> build_service_instance = std::shared_ptr<ServiceType>(std::move(service_instance_));
 
-            std::shared_ptr<ServiceObject> acceptor = build_service_instance->acceptor_object_;
+            std::shared_ptr<ServiceSession> acceptor = build_service_instance->acceptor_object_;
             if (nullptr == acceptor) {
-                build_service_instance->acceptor_object_ = std::make_shared<ServiceObject>(build_service_instance);
+                build_service_instance->acceptor_object_ = std::make_shared<ServiceSession>(build_service_instance);
                 acceptor = build_service_instance->acceptor_object_;
             }
 

@@ -1,5 +1,5 @@
 #include <braid/service/Service.h>
-#include <braid/service/ServiceObject.h>
+#include <braid/service/ServiceSession.h>
 #include <braid/thread/WorkerThread.h>
 #include <braid/net/IOOperation.h>
 
@@ -20,7 +20,7 @@ namespace braid {
 		std::shared_ptr<Service> self = shared_from_this();
 		for (int i = 0; i < session_count_; ++i)
 		{
-			sessions_.emplace_back(std::make_shared<ServiceObject>(self));
+			sessions_.emplace_back(std::make_shared<ServiceSession>(self));
 			sessions_.back()->request_accept(acceptor_object_->get_socket_fd());
 		}
 

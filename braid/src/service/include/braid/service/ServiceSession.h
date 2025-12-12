@@ -5,12 +5,13 @@
 namespace braid {
 
 	class Service;
+	class Actor;
 	// 서비스 레이어에서 사용하는 기본 오브젝트
-	class ServiceObject : public IOUringObject {
+	class ServiceSession : public IOUringObject {
 
 	public:
-		ServiceObject(std::shared_ptr<Service>& service_instance);
-		virtual ~ServiceObject() = default;
+		ServiceSession(std::shared_ptr<Service>& service_instance);
+		virtual ~ServiceSession() = default;
 
 
 	public:
