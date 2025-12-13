@@ -6,14 +6,14 @@
 #include <braid/message/MessageDispatcher.h>
 
 #include <braid/net/IOOperationRecv.h>
-#include <braid/net/IOOperationSend.h>
 #include <braid/net/IOOperationAccept.h>
+#include <braid/net/IOOperationSendBuffer.h>
 
 #include <iostream>
 
 namespace braid {
 	ServiceSession::ServiceSession(std::shared_ptr<Service>& service_instance) 
-		: service_instance_(service_instance), actor_(new Actor()) {
+		: service_instance_(service_instance), main_actor_(new Actor()) {
 		
 		assert(nullptr != service_instance);
 	}
@@ -26,8 +26,8 @@ namespace braid {
 			service_ptr_->request_io(io_recv);
 	}
 
-	void ServiceSession::request_send(std::span<char>& send_buffer) {
-		IOOperationSend* io_send = new IOOperationSend(shared_from_this(), send_buffer);
+	void ServiceSession::request_send(ObjectPtr<SendBuffer> send_buffer) {
+		IOOperationSendBuffer* io_send = new IOOperationSendBuffer(shared_from_this(), send_buffer);
 
 		if (auto service_ptr_ = service_instance_.lock())
 			service_ptr_->request_io(io_send);
@@ -58,7 +58,7 @@ namespace braid {
 				break;
 
 			message_span = message_span.subspan(header->size);
-			g_dispatcher.dispatch(header->message_type, message_span, actor_);
+			g_dispatcher.dispatch(header->message_type, message_span, main_actor_);
 			process_completed(header->size);
 		}
 		while(false);

@@ -1,8 +1,9 @@
 #pragma once
+#include <memory>
+
 #include <braid/net/IOUringObject.h>
 #include <braid/service/Actor.h>
-#include <span>
-#include <memory>
+#include <braid/message/SendBuffer.h>
 
 namespace braid {
 
@@ -17,7 +18,7 @@ namespace braid {
 
 	public:
 		void request_receive();
-		void request_send(std::span<char>& send_buffer);
+		void request_send(ObjectPtr<SendBuffer> send_buffer);
 		void request_accept(int accept_fd_);
 
 
@@ -29,6 +30,6 @@ namespace braid {
 	protected:
 		const std::weak_ptr<Service> service_instance_;
 
-		ObjectPtr<Actor> actor_;
+		ObjectPtr<Actor> main_actor_;
 	};
 }

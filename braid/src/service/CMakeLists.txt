@@ -4,7 +4,9 @@ add_library(braid-service STATIC
 							"src/thread/WorkerThread.cc"
 							"src/service/Service.cc"
 							"src/service/ServiceSession.cc"
+							"src/service/Actor.cc"
 							"src/message/MessageDispatcher.cc"
+							"src/net/IOOperationSendBuffer.cc"
 							)
 
 
