@@ -10,4 +10,5 @@ project("braid")
 project("test-client")
 
 add_subdirectory("braid")
+add_subdirectory("sample-server")
 add_subdirectory("test-client")

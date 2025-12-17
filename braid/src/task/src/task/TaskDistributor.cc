@@ -11,7 +11,9 @@ namespace braid {
         while (!serializer_queue_.empty()) {
             TaskSerializer* task_serializer = nullptr;
             serializer_queue_.pop(task_serializer);
-            delete task_serializer;
+
+            if(nullptr != task_serializer)
+                delete task_serializer;
         }
     }
 
@@ -24,7 +26,9 @@ namespace braid {
         assert(tl_process_task_serializer == nullptr);
 
         TaskSerializer* task_serializer = nullptr;
-        serializer_queue_.pop(task_serializer);
+
+        if (serializer_queue_.pop(task_serializer))
+            assert(nullptr != task_serializer);
 
         if(nullptr == task_serializer)
             return;

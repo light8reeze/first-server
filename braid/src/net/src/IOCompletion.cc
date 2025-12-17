@@ -16,11 +16,12 @@ namespace braid {
 	}
 	
 	IOCompletion::~IOCompletion() {
-		if (nullptr != ring_ && nullptr != cqe_)
-			::io_uring_cqe_seen(ring_, cqe_);
 
 		if (nullptr != completed_operation_)
 			delete completed_operation_;
+
+		if (nullptr != ring_ && nullptr != cqe_)
+			::io_uring_cqe_seen(ring_, cqe_);
 	}
 
 	int IOCompletion::get_result() const {
