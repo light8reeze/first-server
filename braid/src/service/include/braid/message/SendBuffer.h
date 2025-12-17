@@ -2,6 +2,7 @@
 #include <span>
 #include <cstring>
 #include <string>
+#include <type_traits>
 
 #include <braid/task/RefCountable.h>
 
@@ -19,7 +20,7 @@ namespace braid {
     public:
         template<typename... Args>
         void write(const Args&... args) {
-            static_assert(std::is_trivially_copyable_v<Args...>);
+            static_assert((std::is_trivially_copyable_v<Args> && ...));
 
             constexpr int total_size = (sizeof(Args) + ... + 0);
             if (MAX_MESSAGE_SIZE < size_ + total_size)

@@ -59,21 +59,22 @@ namespace braid {
 	}
 
 	void ServiceSession::on_received(int bytes_received) {
-
-		do {
-			if (commited_size_ < sizeof(MessageHeader))
-				break;
-			
-			std::span<char> message_span = get_received_span();
-			MessageHeader* header = parse_message<MessageHeader>(message_span);
-			if (message_span.size() < header->size)
+		while (true) {
+			if (commited_size_ < static_cast<int>(sizeof(MessageHeader)))
 				break;
 
-			message_span = message_span.subspan(header->size);
+			std::span<char> received_span = get_received_span();
+			MessageHeader* header = parse_message<MessageHeader>(received_span);
+			if (nullptr == header || header->size < static_cast<int>(sizeof(MessageHeader)))
+				break;
+
+			if (received_span.size() < static_cast<size_t>(header->size))
+				break;
+
+			std::span<char> message_span = received_span.first(header->size);
 			g_dispatcher.dispatch(header->message_type, message_span, main_actor_);
 			process_completed(header->size);
 		}
-		while(false);
 
 		request_receive();
 	}

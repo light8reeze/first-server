@@ -24,5 +24,5 @@ namespace braid {
         std::unordered_map<int, MessageHandler> handlers_;
     };
 
-    static MessageDispatcher g_dispatcher;
+    inline MessageDispatcher g_dispatcher{};
 }

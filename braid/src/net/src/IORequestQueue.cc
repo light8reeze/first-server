@@ -1,6 +1,7 @@
 #include <braid/net/IORequestQueue.h>
 #include <braid/net/IOUringObject.h>
 #include <braid/net/IOOperation.h>
+#include <cassert>
 
 namespace braid {
 
@@ -38,6 +39,7 @@ namespace braid {
 	}
 
 	void IORequestQueue::push_request(IOOperation* operation) {
+		assert(nullptr != operation);
 		int count = 0;
 		while (!request_queue_.push(operation) && count++ < 10) {
 			// TODO: push 회수 제한, 예외처리
@@ -45,8 +47,13 @@ namespace braid {
 	}
 
 	void IORequestQueue::flush_requests() {
+		if (request_queue_.empty())
+			return;
+
 		IOOperation* operation = nullptr;
 		while (request_queue_.pop(operation)) {
+			assert(nullptr != operation);
+
 			if (operation)
 				operation->request_io(&ring_);
 		}
