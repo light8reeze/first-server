@@ -162,9 +162,7 @@ int main(int argc, char** argv) {
               sockets[i] = -1;
           }
 
-          if ((i + 1) % 1000 == 0) {
-              std::cout << "Sent initial messages: " << (i + 1) << std::endl;
-          }
+          std::cout << "Sent initial messages: " << (i + 1) << std::endl;
       }
   }
 

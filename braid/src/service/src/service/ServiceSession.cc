@@ -56,6 +56,9 @@ namespace braid {
 		}
 
 		request_receive();
+
+		if(auto service_ptr_ = service_instance_.lock())
+			service_ptr_->request_accept_one();
 	}
 
 	void ServiceSession::on_received(int bytes_received) {

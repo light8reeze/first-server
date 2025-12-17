@@ -2,6 +2,7 @@
 #include <braid/service/ServiceBuilder.h>
 #include <vector>
 #include <atomic>
+#include <mutex>
 
 namespace braid {
     class IOOperation;
@@ -29,6 +30,8 @@ namespace braid {
 
         void on_session_closed(std::shared_ptr<ServiceSession> session);
 
+        void request_accept_one();
+
 
     private:
         virtual void initialize_threads();
@@ -43,7 +46,11 @@ namespace braid {
 		int session_count_          = 1000;
 		int thread_count_           = 4;
 		int queue_depth_per_thread_ = 1024;
+        int backlog_                = 4096;
+
 
         std::atomic<int> request_index_ = 0;
+        std::mutex sessions_mutex_;
+        std::atomic<int> accept_count_ = 0;
     };
 }

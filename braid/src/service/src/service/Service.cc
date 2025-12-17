@@ -3,6 +3,8 @@
 #include <braid/thread/WorkerThread.h>
 #include <braid/net/IOOperation.h>
 
+#include <iostream>
+
 namespace braid {
 	Service::Service() 
 		: worker_threads_() {
@@ -19,10 +21,10 @@ namespace braid {
 		sessions_.reserve(session_count_);
 		std::shared_ptr<Service> self = shared_from_this();
 		for (int i = 0; i < session_count_; ++i)
-		{
 			sessions_.emplace_back(std::make_shared<ServiceSession>(self));
-			sessions_.back()->request_accept(acceptor_object_->get_socket_fd());
-		}
+
+		for(int i = 0; i < backlog_; ++i)
+			request_accept_one();
 
 		return true;
 	}
@@ -52,7 +54,13 @@ namespace braid {
 	}
 
 	void Service::on_session_closed(std::shared_ptr<ServiceSession> session) {
-		session->request_accept(acceptor_object_->get_socket_fd());
+        {
+            std::lock_guard<std::mutex> lock(sessions_mutex_);
+            sessions_.push_back(session);
+        }
+
+		std::cout << "Session closed: " << std::endl;
+		request_accept_one();
 	}
 
 	void Service::initialize_threads() {
@@ -62,4 +70,19 @@ namespace braid {
 			worker_threads_.back()->initialize();
 		}
 	}
+
+	void Service::request_accept_one() {
+
+        std::shared_ptr<ServiceSession> session;
+        {
+            std::lock_guard<std::mutex> lock(sessions_mutex_);
+		    if (sessions_.empty())
+			    return;
+
+		    session = sessions_.back();
+    		sessions_.pop_back();
+        }
+
+		session->request_accept(acceptor_object_->get_socket_fd());
+	}	
 }
