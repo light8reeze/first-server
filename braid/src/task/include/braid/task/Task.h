@@ -22,8 +22,10 @@ namespace braid {
 
             // RefCountable 인경우 ref_count를 증가시킨다.
             for_each_tuple(args_, [](auto& arg) {
-                if constexpr (std::is_base_of_v<RefCountable, std::decay_t<decltype(arg)>>)
-                    arg->add_ref();
+                if constexpr (std::is_base_of_v<RefCountable, std::decay_t<decltype(arg)>>) {
+                    if(nullptr != arg)
+                        arg->add_ref();
+                }
             });
 
         }
@@ -33,16 +35,20 @@ namespace braid {
         explicit Task(ObjPtr&& obj, Func&& func, Args... args) : args_(std::move(func), obj.get(), std::forward<Args>(args)...) {
         
             for_each_tuple(args_, [](auto& arg) {
-                if constexpr (std::is_base_of_v<RefCountable, std::decay_t<decltype(arg)>>)
-                    arg->add_ref();
+                if constexpr (std::is_base_of_v<RefCountable, std::decay_t<decltype(arg)>>) {
+                    if(nullptr != arg)
+                        arg->add_ref();
+                }
             });
         }
 
         virtual ~Task() override {
 
             for_each_tuple(args_, [](auto& arg) {
-                if constexpr (std::is_base_of_v<RefCountable, std::decay_t<decltype(arg)>>)
-                    arg->release();
+                if constexpr (std::is_base_of_v<RefCountable, std::decay_t<decltype(arg)>>) {
+                    if(nullptr != arg)
+                        arg->release();
+                }
             });
         }
 

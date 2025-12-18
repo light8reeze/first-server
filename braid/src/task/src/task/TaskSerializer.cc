@@ -3,7 +3,7 @@
 #include <braid/task/Task.h>
 
 namespace braid {
-    TaskSerializer::TaskSerializer() : task_queue_(MAX_TASK_COUNT) {
+    TaskSerializer::TaskSerializer(int capacity) : task_queue_(capacity) {
     }
 
     TaskSerializer::~TaskSerializer() {
@@ -25,7 +25,7 @@ namespace braid {
     }
 
     ObjectPtr<ITask> TaskSerializer::pop() {
-        ITask* task;
+        ITask* task = nullptr;
         task_queue_.pop(task);
         return ObjectPtr<ITask>(task);
     }

@@ -20,11 +20,11 @@ namespace braid {
         
 
     public:
-        TaskSerializer();
+        TaskSerializer(int capacity = MAX_TASK_COUNT);
         virtual ~TaskSerializer();
 
 
-    private:
+    protected:
         void push(ITask* task);
 
         
@@ -63,5 +63,7 @@ namespace braid {
     private:
         boost::lockfree::queue<ITask*>  task_queue_;
         std::atomic<STATE>              state_{RUNNING};
+
+
     };
 }
