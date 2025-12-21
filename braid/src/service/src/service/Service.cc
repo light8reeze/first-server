@@ -17,11 +17,14 @@ namespace braid {
 	bool Service::initialize() {
 		initialize_threads();
 
-		// TODO: Session Factory를 사용하여 생성
 		sessions_.reserve(session_count_);
+		sessions_queue_.reserve(session_count_);
 		std::shared_ptr<Service> self = shared_from_this();
-		for (int i = 0; i < session_count_; ++i)
-			sessions_.emplace_back(std::make_shared<ServiceSession>(self));
+		for (int i = 0; i < session_count_; ++i) {
+			auto new_session = std::make_shared<ServiceSession>(self);
+			sessions_queue_.push(new_session.get());
+			sessions_.emplace_back(std::move(new_session));
+		}
 
 		for(int i = 0; i < backlog_; ++i)
 			request_accept_one();
@@ -54,12 +57,8 @@ namespace braid {
 	}
 
 	void Service::on_session_closed(std::shared_ptr<ServiceSession> session) {
-        {
-            std::lock_guard<std::mutex> lock(sessions_mutex_);
-            sessions_.push_back(session);
-        }
+		sessions_queue_.push(session.get());
 
-		std::cout << "Session closed: " << std::endl;
 		request_accept_one();
 	}
 
@@ -72,17 +71,8 @@ namespace braid {
 	}
 
 	void Service::request_accept_one() {
-
-        std::shared_ptr<ServiceSession> session;
-        {
-            std::lock_guard<std::mutex> lock(sessions_mutex_);
-		    if (sessions_.empty())
-			    return;
-
-		    session = sessions_.back();
-    		sessions_.pop_back();
-        }
-
-		session->request_accept(acceptor_object_->get_socket_fd());
+        ServiceSession* new_session;
+		if(sessions_queue_.pop(new_session))
+			new_session->request_accept(acceptor_object_->get_socket_fd());
 	}	
 }
