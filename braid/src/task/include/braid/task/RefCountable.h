@@ -1,5 +1,6 @@
 #pragma once
 #include <boost/intrusive_ptr.hpp>
+#include <atomic>
 #include <assert.h>
 
 namespace braid {
@@ -11,19 +12,22 @@ namespace braid {
         RefCountable() = default;
         virtual ~RefCountable() = default;
 
+        virtual void on_final_release() {
+            delete this;
+        }
 
     public:
         friend void intrusive_ptr_add_ref(RefCountable* ptr) {
             if(nullptr != ptr)
-                ptr->ref_count_.fetch_add(1, std::memory_order_relaxed); 
+                ptr->ref_count_.fetch_add(1, std::memory_order_relaxed);
         }
-        
-        friend void intrusive_ptr_release(RefCountable* ptr) { 
+
+        friend void intrusive_ptr_release(RefCountable* ptr) {
             assert(nullptr != ptr);
             assert(0 < ptr->ref_count_);
 
             if(nullptr != ptr && ptr->ref_count_.fetch_sub(1, std::memory_order_acq_rel) == 1)
-                delete ptr;
+                ptr->on_final_release();
         }
 
         void add_ref() {
