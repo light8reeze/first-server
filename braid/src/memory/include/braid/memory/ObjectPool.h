@@ -12,6 +12,8 @@ namespace braid {
 
     template<typename T>
     class ObjectPool {
+        NON_COPYABLE(ObjectPool)
+
     public:
         static constexpr size_t DEFAULT_INITIAL_COUNT = 128;
         static constexpr size_t DEFAULT_CHUNK_SIZE = 128;
@@ -45,27 +47,24 @@ namespace braid {
             }
         }
 
-        NON_COPYABLE(ObjectPool)
-
     public:
         template<typename... Args>
         T* acquire(Args&&... args) noexcept {
             T* obj = get_tls_cache().try_acquire();
 
             if (obj == nullptr) {
-                if (!free_queue_.pop(obj)) {
+                if (!free_queue_.pop(obj))
                     obj = batch_steal_from_central();
+            }
 
-                    if (obj == nullptr) {
-                        if (allocate_chunk(chunk_size_)) {
-                            free_queue_.pop(obj);
-                        } else {
-                            // 할당중인경우 20회정도 재시도 한다.
-                            for (int retry = 0; retry < 20; ++retry) {
-                                if (free_queue_.pop(obj))
-                                    break;
-                            }
-                        }
+            if (obj == nullptr) {
+                if (allocate_chunk(chunk_size_)) 
+                    free_queue_.pop(obj);
+                else {
+                    // 할당중인경우 20회정도 재시도 한다.
+                    for (int retry = 0; retry < 20; ++retry) {
+                        if (free_queue_.pop(obj))
+                            break;
                     }
                 }
             }
@@ -183,9 +182,9 @@ namespace braid {
         size_t tls_cache_size_;
         size_t batch_size_;
 
-        boost::lockfree::queue<T*> free_queue_;
-        std::atomic<MemoryChunk<T>*> chunk_head_;
-        std::atomic<size_t> total_allocated_;
-        std::atomic_flag allocating_ = ATOMIC_FLAG_INIT;
+        boost::lockfree::queue<T*>      free_queue_;
+        std::atomic<MemoryChunk<T>*>    chunk_head_;
+        std::atomic<size_t>             total_allocated_;
+        std::atomic_flag                allocating_ = ATOMIC_FLAG_INIT;
     };
 }
