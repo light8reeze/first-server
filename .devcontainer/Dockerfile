@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ARG BOOST_VERSION=1.83.0
 ARG BOOST_DIR=boost_${BOOST_VERSION//./_}
@@ -14,11 +14,13 @@ RUN apt update && apt install -y \
     vim \
     curl \
     gdb \
+    gcc g++ \
     wget \
     ca-certificates \
     python3 \
     libicu-dev \
     liburing-dev \
+    nodejs npm \
     && rm -rf /var/lib/apt/lists/*
 
 RUN cd /tmp \
@@ -29,6 +31,8 @@ RUN cd /tmp \
     && ./b2 -j$(nproc) install \
     && cd /tmp \
     && rm -rf ${BOOST_DIR} ${BOOST_ARCHIVE}
+
+RUN npm install -g @anthropic-ai/claude-code
 
 ENV CMAKE_PREFIX_PATH=${BOOST_PREFIX}:${CMAKE_PREFIX_PATH}
 

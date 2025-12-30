@@ -10,8 +10,10 @@ namespace braid {
 		NON_COPYABLE(IOCompletion);
 
 	public:
-		IOCompletion(io_uring* ring, io_uring_cqe* cqe);
-		IOCompletion(IOCompletion&& io_completion) noexcept;
+		explicit IOCompletion(io_uring* ring, io_uring_cqe* cqe) noexcept;
+		explicit IOCompletion(IOCompletion&& io_completion) noexcept;
+		explicit IOCompletion(int result) noexcept;
+
 		~IOCompletion();
 
 
@@ -27,6 +29,7 @@ namespace braid {
 	private:
 		io_uring*				ring_ = nullptr;
 		io_uring_cqe*			cqe_ = nullptr;
+		int 					result_ = 0;
 		ObjectPtr<IOOperation> 	completed_operation_ = nullptr;
 	};
 }

@@ -3,6 +3,7 @@
 #include <braid/service/Service.h>
 #include <braid/service/ServiceBuilder.h>
 #include <braid/task/TaskSerializer.h>
+#include <braid/util/LogHandler.h>
 #include <algorithm>
 #include <chrono>
 #include <atomic>
@@ -54,12 +55,6 @@ void timestamp_task(Actor *actor, long long timestamp, std::string message) {
   std::uniform_int_distribution<int> dist(1, 4000);
   int total_send_size = dist(rng);
 
-  std::cout << "[Task] Executing with timestamp: " << timestamp
-            << ", Seq: " << seq
-            << ", Expected: " << expected_seq
-            << ", Sequential: " << (sequential_ok ? "true" : "false")
-            << ", SendSize: " << total_send_size << std::endl;
-
   std::string header = sequential_ok ? "[OK] " : "[ERR] ";
   header += "seq=" + std::to_string(seq) + "; ";
   header += "sequential=" + std::string(sequential_ok ? "true" : "false") + "; ";
@@ -90,12 +85,10 @@ void timestamp_task(Actor *actor, long long timestamp, std::string message) {
     remaining -= chunk;
     offset += chunk;
   }
-
-  std::cout << "[Task] Echo sent back to client." << std::endl;
 }
 
 int main(int argc, char *argv[]) {
-  std::cout << "Starting Sample Server..." << std::endl;
+  LOG_INFO("Starting Sample Server...");
 
   // Initialize Dispatcher
   // 1-2 Write MessageHandler event that echo to client and add to
@@ -105,7 +98,7 @@ int main(int argc, char *argv[]) {
         MessageHeader *hdr = parse_message<MessageHeader>(data);
         if (!hdr || hdr->size < static_cast<int>(sizeof(MessageHeader)) ||
             hdr->size > static_cast<int>(data.size())) {
-          std::cout << "Failed to parse message" << std::endl;
+          LOG_ERROR("Failed to parse message");
           return;
         }
 
@@ -144,12 +137,12 @@ int main(int argc, char *argv[]) {
                      .build();
 
   if (!service) {
-    std::cerr << "Failed to build service" << std::endl;
+    LOG_ERROR("Failed to build service");
     return 1;
   }
 
   if (!service->initialize()) {
-    std::cerr << "Failed to initialize service" << std::endl;
+    LOG_ERROR("Failed to initialize service");
     return 1;
   }
 

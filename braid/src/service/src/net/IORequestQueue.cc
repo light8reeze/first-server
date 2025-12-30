@@ -1,6 +1,8 @@
 #include <braid/net/IORequestQueue.h>
 #include <braid/net/IOUringObject.h>
 #include <braid/net/IOOperation.h>
+#include <braid/util/LogHandler.h>
+
 #include <cassert>
 
 namespace braid {
@@ -27,8 +29,15 @@ namespace braid {
 			ret = ::io_uring_wait_cqe(&ring_, &cqe);
 
 		if (ret < 0) {
-			// TODO: Handle error
-			return IOCompletion(nullptr, nullptr);
+			switch(ret) {
+				case -EINTR:
+					[[fallthrough]]
+				case -ETIME:
+					return IOCompletion(nullptr, nullptr);
+				default:
+					LOG_ERROR("io_uring_wait_cqe_timeout failed: %d", ret);
+					return IOCompletion(ret);
+			}
 		}
 
 		return IOCompletion(&ring_, cqe);

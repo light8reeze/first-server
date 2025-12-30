@@ -3,19 +3,24 @@
 #include <liburing.h>
 
 namespace braid {
-	IOCompletion::IOCompletion(io_uring* ring, io_uring_cqe* cqe)
+	IOCompletion::IOCompletion(io_uring* ring, io_uring_cqe* cqe) noexcept
 		: ring_(ring), cqe_(cqe) {	
 		if(nullptr != cqe_) {
 			IOOperation* op = reinterpret_cast<IOOperation*>(::io_uring_cqe_get_data(cqe_));
 			completed_operation_ = std::move(ObjectPtr<IOOperation>(op, false));
+			result_ = cqe_->res;
 		}
 	}
 
 	IOCompletion::IOCompletion(IOCompletion&& io_completion) noexcept
-		: ring_(io_completion.ring_), cqe_(io_completion.cqe_) {
+		: ring_(io_completion.ring_), cqe_(io_completion.cqe_), result_(io_completion.result_) {
 		io_completion.ring_ = nullptr;
 		io_completion.cqe_	= nullptr;
+		io_completion.result_ = 0;
 	}
+
+	IOCompletion::IOCompletion(int result) noexcept
+		: ring_(nullptr), cqe_(nullptr), result_(result) {}
 	
 	IOCompletion::~IOCompletion() {
 
@@ -24,7 +29,7 @@ namespace braid {
 	}
 
 	int IOCompletion::get_result() const {
-		return cqe_ ? cqe_->res : -1;
+		return result_;
 	}
 
 	void IOCompletion::handle_completion() {
